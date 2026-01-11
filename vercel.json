@@ -2,10 +2,6 @@
   "version": 2,
   "builds": [
     {
-      "src": "requirements-clean.txt",
-      "use": "@vercel/python"
-    },
-    {
       "src": "app.py",
       "use": "@vercel/python"
     }
@@ -13,7 +9,25 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "app.py"
+      "dest": "app.py",
+      "methods": ["GET", "POST", "OPTIONS"]
     }
-  ]
+  ],
+  "env": {
+    "PYTHON_VERSION": "3.9",
+    "NODE_VERSION": "18"
+  },
+  "functions": {
+    "app.py": {
+      "maxDuration": 30,
+      "memory": 1024
+    }
+  },
+  "build": {
+    "env": {
+      "PYTHONPATH": "/var/task",
+      "PIP_USE_PEP517": "false"
+    }
+  },
+  "regions": ["sin1"]
 }
