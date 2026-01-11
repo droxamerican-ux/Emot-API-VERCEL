@@ -1,1 +1,1 @@
-# Emot-API-VERCEL
+# Emot
