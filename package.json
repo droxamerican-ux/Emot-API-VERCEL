@@ -4,14 +4,17 @@
   "description": "Fast Emote Bot API for Free Fire",
   "main": "app.py",
   "scripts": {
-    "start": "python app.py",
+    "start": "gunicorn app:app",
+    "dev": "python app.py",
     "test": "echo 'No tests specified'",
     "vercel-build": "pip install -r requirements.txt"
   },
   "keywords": ["freefire", "bot", "api", "emote"],
-  "author": "Your Name",
+  "author": "drox",
   "license": "MIT",
   "engines": {
     "node": ">=18"
-  }
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

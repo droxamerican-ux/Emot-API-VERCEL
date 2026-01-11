@@ -7,15 +7,12 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from Pb2 import DEcwHisPErMsG_pb2 , MajoRLoGinrEs_pb2 , PorTs_pb2 , MajoRLoGinrEq_pb2 , sQ_pb2 , Team_msg_pb2
-def render(text, colors=['cyan', 'blue'], align='center'):
-    return f"\n{'='*50}\n{text}\n{'='*50}\n"
-def say(text):
-    print(f"\n💬 {text}\n")
+from cfonts import render, say
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 
 
-#EMOTES BY PARAHEX X CODEX
+#EMOTES BY drox
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)  
 
@@ -603,9 +600,27 @@ def home():
         "note": "⚡ Ultra-fast execution with immediate exit"
     })
 
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({
+        "status": "error",
+        "message": "Endpoint not found",
+        "available_endpoints": ["/", "/join", "/status"]
+    }), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({
+        "status": "error",
+        "message": "Internal server error - Vercel timeout or bot disconnected"
+    }), 500
+
 def run_flask():
     """Run Flask server"""
-    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+    port = int(os.environ.get('PORT', 5000))
+    host = '0.0.0.0'
+    print(f"🚀 Starting server on {host}:{port}")
+    app.run(host=host, port=port, debug=False, use_reloader=False, threaded=True)
 
 async def MaiiiinE():
     global loop, key, iv, region
@@ -693,11 +708,20 @@ def run_bot_async():
     asyncio.run(StarTinG())
 
 if __name__ == '__main__':
+    # احصل على المنفذ من متغيرات Vercel البيئية أو استخدم 5000 كافتراضي
+    port = int(os.environ.get('PORT', 5000))
+    
+    # استخدم استضافة 0.0.0.0 للنشر السحابي
+    host = '0.0.0.0'
+    
     try:
         bot_thread = threading.Thread(target=run_bot_async, daemon=True)
         bot_thread.start()
-        # استخدم منفذ 5000 لتوافق مع Vercel
-        app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+        
+        # تشغيل Flask مع الإعدادات المناسبة
+        print(f"🚀 Starting server on {host}:{port}")
+        app.run(host=host, port=port, debug=False, use_reloader=False, threaded=True)
+        
     except Exception as e:
         print(f"Fatal error: {e}")
         import sys

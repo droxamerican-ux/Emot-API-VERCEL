@@ -6,3 +6,7 @@
 ```bash
 git clone <your-repo>
 cd emote-bot
+
+2. **Install dependencies:**
+```bash
+pip install -r requirements.txt
