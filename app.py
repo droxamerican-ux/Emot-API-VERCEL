@@ -7,7 +7,10 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from Pb2 import DEcwHisPErMsG_pb2 , MajoRLoGinrEs_pb2 , PorTs_pb2 , MajoRLoGinrEq_pb2 , sQ_pb2 , Team_msg_pb2
-from cfonts import render, say
+def render(text, colors=['cyan', 'blue'], align='center'):
+    return f"\n{'='*50}\n{text}\n{'='*50}\n"
+def say(text):
+    print(f"\n💬 {text}\n")
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 
