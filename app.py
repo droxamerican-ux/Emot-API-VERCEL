@@ -1,4 +1,4 @@
-import requests , os , psutil , sys , jwt , pickle , json , binascii , time , urllib3 , base64 , datetime , re , socket , threading , ssl , pytz , aiohttp
+import requests , os , psutil , sys , jwt , pickle , json , binascii , time , urllib3 , base64 , datetime , re , socket , threading , ssl , pytz , aiohttp, asyncio, random
 from flask import Flask, request, jsonify
 from protobuf_decoder.protobuf_decoder import Parser
 from xC4 import * ; from xHeaders import *
@@ -8,6 +8,8 @@ from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 from Pb2 import DEcwHisPErMsG_pb2 , MajoRLoGinrEs_pb2 , PorTs_pb2 , MajoRLoGinrEq_pb2 , sQ_pb2 , Team_msg_pb2
 from cfonts import render, say
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
 
 
 #EMOTES BY PARAHEX X CODEX
@@ -569,14 +571,31 @@ def bot_status():
 
 @app.route('/')
 def home():
-    """Home page"""
+    """Home page with full API example"""
+    # احصل على الرابط الحالي للطلب
+    base_url = request.host_url.rstrip('/')
+    
+    # مثال لرابط API
+    example_url = f"{base_url}/join?tc=TEAM123&emote_id=5&uid1=123456789&uid2=987654321"
+    
     return jsonify({
         "status": "success",
-        "service": "Fast Emote Bot API",
-        "endpoints": {
-            "/join": "Execute emote instantly (tc, uid1-4, emote_id)",
-            "/status": "Check bot connection status",
-            "/": "This info page"
+        "service": "⚡ Fast Emote Bot API",
+        "api_base": base_url,
+        "live_endpoints": {
+            f"{base_url}/join": {
+                "description": "Execute emote instantly",
+                "parameters": {
+                    "tc": "Team code (required)",
+                    "emote_id": "Emote ID number (required)",
+                    "uid1": "First target UID",
+                    "uid2": "Second target UID",
+                    "uid3": "Third target UID",
+                    "uid4": "Fourth target UID"
+                },
+                "example": example_url
+            },
+            f"{base_url}/status": "Check bot connection status"
         },
         "note": "⚡ Ultra-fast execution with immediate exit"
     })
@@ -638,8 +657,20 @@ async def MaiiiinE():
     print(f"⚡ Project 1 Bot Started on Target: {TarGeT}")
     print(f"📛 Bot Name: {acc_name}")
     print(f"🌍 Region: {region}")
-    public_domain = os.environ.get('VERCEL_DEV_DOMAIN', '0.0.0.0:5000')
-    print(f"🔗 API: https://{public_domain}")
+    
+    # احصل على الدومين الحالي من Vercel environment
+    public_domain = os.environ.get('VERCEL_URL', 
+                       os.environ.get('RENDER_EXTERNAL_URL', 
+                       '0.0.0.0:5000'))
+
+    # تنظيف الرابط (إزالة https:// إذا موجود)
+    if public_domain.startswith('https://'):
+        public_domain = public_domain[8:]
+    elif public_domain.startswith('http://'):
+        public_domain = public_domain[7:]
+    
+    print(f"🔗 API Base: https://{public_domain}")
+    print(f"📋 Example: https://{public_domain}/join?tc=TEAM123&emote_id=5&uid1=123456789")
     print(f"✅ Status: Online & Ready")
     print(f"⚡ Mode: Ultra-fast execution")
     print("─" * 50)
@@ -662,7 +693,8 @@ if __name__ == '__main__':
     try:
         bot_thread = threading.Thread(target=run_bot_async, daemon=True)
         bot_thread.start()
-        app.run(host='0.0.0.0', port=3001, debug=False, use_reloader=False)
+        # استخدم منفذ 5000 لتوافق مع Vercel
+        app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
     except Exception as e:
         print(f"Fatal error: {e}")
         import sys
