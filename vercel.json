@@ -1,33 +1,19 @@
 {
-  "version": 2,
+  "version": 1,
   "builds": [
     {
+      "src": "requirements-clean.txt",
+      "use": "@vercel/python"
+    },
+    {
       "src": "app.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.9"
-      }
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/",
-      "methods": ["GET"],
-      "dest": "app.py"
-    },
-    {
-      "src": "/join",
-      "methods": ["GET"],
-      "dest": "app.py"
-    },
-    {
-      "src": "/status",
-      "methods": ["GET"],
+      "src": "/(.*)",
       "dest": "app.py"
     }
-  ],
-  "env": {
-    "PYTHON_VERSION": "3.9"
-  }
+  ]
 }
